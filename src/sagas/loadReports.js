@@ -6,10 +6,9 @@ export function *loadReports() {
     try {
 
         const reports = yield call(getReports);
-        yield put({type: types.FETCH_REPORTS_SUCCESS, payload: reports});
-        console.log('put FETCH_REPORTS_SUCCESS ', reports);
+        yield put({type: types.REPORTS_FETCH_SUCCESS, reports: reports});
 
     } catch (error) {
-        yield put({type: types.FETCH_REPORTS_FAILURE, error});
+        yield put({type: types.REPORTS_FETCH_FAILURE, error});
     }
 }

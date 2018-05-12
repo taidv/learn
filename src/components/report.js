@@ -7,10 +7,14 @@ class Report extends React.Component {
         const {report} = this.props;
 
         return (
-            report ?
-            <p> {report.id} - {report.name} : {report.value} </p>
-            :
-            <p>No report data! </p>
+            <div>
+            {
+                report ?
+                <p> {report.id} - {report.name} : {report.value} </p>
+                :
+                <p>No report data! </p>
+            }
+            </div>
         )
     }
 }

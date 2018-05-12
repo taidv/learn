@@ -1,16 +1,19 @@
-//REMOVE
 import * as types from '../constants/actionTypes';
 
 export const fetchReportsBegin = () => ({
-    type: types.FETCH_REPORT_BEGIN
+    type: types.REPORTS_FETCH_BEGIN
 });
 
 export const fetchReportsSuccess = reports => ({
-    type: types.FETCH_REPORT_SUCCESS,
-    payload: { reports }
+    type: types.REPORTS_FETCH_SUCCESS,
+    reports: reports 
 });
 
 export const fetchReportsError = error => ({
-    type: types.FETCH_REPORT_FAILURE,
-    payload: { error }
+    type: types.REPORTS_FETCH_FAILURE,
+    error: error
+});
+
+export const clearReports = () => ({
+    type: types.REPORTS_CLEAR
 });

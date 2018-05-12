@@ -3,10 +3,13 @@ import * as types from '../constants/actionTypes';
 const user = (state = {}, action)  => {
 
     switch(action.type) {
-        case types.FETCH_USER_SUCCESS:
-            return Object.assign({}, state, action.payload);
+        case types.USER_FETCH_SUCCESS:
+            return Object.assign({}, state, action.user);
+        case types.USER_FETCH_BEGIN:
+        case types.USER_CLEAR:
+            return {};
         default :
-            return state;
+            return Object.assign({}, state);
     }
 };
 

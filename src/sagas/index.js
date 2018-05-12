@@ -1,4 +1,4 @@
-import { takeLatest, fork } from 'redux-saga/effects';
+import { takeEvery, takeLatest, fork } from 'redux-saga/effects';
 import { loadUser } from './loadUser';
 import * as types from '../constants/actionTypes';
 import { loadReports } from './loadReports';
@@ -6,8 +6,9 @@ import { loadReports } from './loadReports';
 function *rootSaga() {
     yield [
         fork(loadUser),
-        fork(loadReports)
-        //takeLatest(types.FETCH_USER_SUCCESS, loadUser)
+        fork(loadReports),
+        takeEvery(types.REPORTS_FETCH_BEGIN, loadReports),
+        takeLatest(types.USER_FETCH_BEGIN, loadUser)
     ];
 }
 

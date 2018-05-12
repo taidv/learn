@@ -6,10 +6,9 @@ export function *loadUser() {
     try {
         
         const user = yield call(getUser);
-        yield put({type: types.FETCH_USER_SUCCESS, payload: user});
-        console.log('put FETCH_USER_SUCCESS ', user);
+        yield put({type: types.USER_FETCH_SUCCESS, user: user});
 
     } catch (error) {
-        yield put({type: types.FETCH_USER_FAILURE, error});
+        yield put({type: types.USER_FETCH_FAILURE, error});
     }
 }
