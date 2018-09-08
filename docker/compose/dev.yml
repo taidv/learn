@@ -1,0 +1,10 @@
+version: '2'
+services:
+  dev:
+    image: dev:latest
+    container_name: dev
+
+networks:
+  default:
+    external:
+      name: elasticsearch
