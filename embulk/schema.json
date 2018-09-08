@@ -1,0 +1,18 @@
+{
+  "template": "bulk-mail-log-*",
+  "mappings": {
+    "bulk_mail_schema": {
+      "properties": {
+        "date": {
+          "type": "date"
+        },
+        "processed_time": {
+          "type": "long"
+        },
+        "processed_items": {
+          "type": "long"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+in:
+  type: file
+  path_prefix: ./bulk-mail-logs/
+  parser:
+    charset: UTF-8
+    newline: LF
+    type: csv
+    delimiter: ','
+    quote: '"'
+    escape: '"'
+    columns:
+      - {name: Id, type: long}
+      - {name: ProcessDate, type: string}
+      - {name: ProcessedTime, type: long}
+      - {name: ProccessedItems, type: long}
+
+
+#out: {type: stdout}
+
+out:
+  type: elasticsearch
+  index: bulk-mail
+  index_type: bulk_mail_schema
+  nodes:
+    - {host: elasticsearch}
+
