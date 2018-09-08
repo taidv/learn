@@ -1,0 +1,56 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "command": "gulp",
+    "type": "shell",
+    "args": [],
+    "tasks": [
+        {
+            "label": "build",
+            "args": [],
+            "group": "build",
+            "problemMatcher": [
+                "$lessCompile",
+                "$tsc",
+                "$jshint"
+            ]
+        },
+        {
+            "label": "watch",
+            "args": [],
+            "problemMatcher": [
+                "$lessCompile",
+                "$tsc",
+                "$jshint"
+            ],
+            "isBackground": true
+        },
+        {
+            "label": "test",
+            "args": [],
+            "group": "test"
+        },
+        {
+            "label": "test current file",
+            "command": "./node_modules/.bin/ts-mocha",
+            "args": [
+                "-r",
+                "jsdom-global/register",
+                "${relativeFile}"
+            ],
+            "options": {
+                "env": {
+                    "NODE_ENV": "test"
+                }
+            },
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated"
+            }
+        }
+    ]
+}

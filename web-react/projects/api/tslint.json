@@ -1,0 +1,31 @@
+{
+    "defaultSeverity": "error",
+    "rulesDirectory": [
+        "tslint-plugin-prettier"
+    ],
+    "extends": [
+        "tslint:recommended",
+        "tslint-config-prettier"
+    ],
+    "rules": {
+        "interface-name": false,
+        "interface-over-type-literal": false,
+        "member-ordering": false,
+        "no-unused-variable": true,
+        "no-unused-expression": false,
+        "object-literal-shorthand": false,
+        "object-literal-sort-keys": false,
+        "prettier": [
+            true,
+            {
+                "tabWidth": 4,
+                "printWidth": 120,
+                "singleQuote": true,
+                "semi": true,
+                "jsxBracketSameLine": true,
+                "trailingComma": "es5"
+            }
+        ]
+    },
+    "jsRules": {}
+}

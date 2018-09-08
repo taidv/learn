@@ -1,0 +1,22 @@
+{
+    "name": "web-react",
+    "main": "dist/dist/app/app",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "test": "gulp test",
+        "build": "gulp build",
+        "prepare": "gulp build",
+        "start": "node ./dist/bin/www"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "del": "^3.0.0",
+        "gulp": "^3.9.1",
+        "gulp-changed": "^1.3.2",
+        "gulp-sourcemaps": "^2.6.4",
+        "gulp-tar": "^2.1.0",
+        "gulp-gzip": "^1.4.2",
+        "run-sequence": "^2.0.0"
+    }
+}
