@@ -1,0 +1,7 @@
+[
+    {"id": 1, "name": "Life time", "value": 6820},
+    {"id": 2, "name": "This year", "value": 4020},
+    {"id": 3, "name": "Last year", "value": 1200},
+    {"id": 4, "name": "This month", "value": 29},
+    {"id": 5, "name": "Last month", "value": 409}
+]

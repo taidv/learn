@@ -1,0 +1,21 @@
+{
+    "name": "hrbc-v4",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "eject": "react-scripts eject",
+        "test": "react-scripts test"
+    },
+    "devDependencies": {},
+    "dependencies": {
+        "react": "^16.3.2",
+        "react-dom": "^16.3.2",
+        "react-redux": "^5.0.7",
+        "react-router": "^4.2.0",
+        "react-scripts": "1.1.4",
+        "redux": "^4.0.0",
+        "redux-saga": "^0.16.0"
+    }
+}
