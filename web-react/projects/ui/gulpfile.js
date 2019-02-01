@@ -1,25 +1,17 @@
 const changed = require('gulp-changed');
 const del = require('del');
 const gulp = require('gulp');
-const mocha = require('gulp-mocha');
-const runSequence = require('run-sequence');
 const sourcemaps = require('gulp-sourcemaps');
 const webpack = require('webpack');
 const webpackstream = require('webpack-stream');
 const ts = require('gulp-typescript');
 const packageJson = require('./package.json');
-var tsProject = ts.createProject("tsconfig.json");
-var paths = {
-
-}
+const tsProject = ts.createProject("tsconfig.json");
 const distTest = packageJson.test;
 
 const TYPESCRIPT_FILES = ['src/**/*.{ts,tsx,less}'];
 const STATIC_FILES = ['src/static/**/*', '!**/*.{ts,tsx}'];
-
-var webpackCfg = require('./webpack.config.js');
-
-var cdnResolve = function (lib, version) { };
+const webpackCfg = require('./webpack.config.js');
 
 gulp.task('build:static', function () {
     return gulp.src(STATIC_FILES)
@@ -30,14 +22,17 @@ gulp.task('build:static', function () {
 gulp.task('build:webpack', function () {
     return gulp.src(TYPESCRIPT_FILES)
         .pipe(webpackstream(webpackCfg, webpack))
+        .on('error', function handleError() {
+            this.emit('end');
+        })
         .pipe(gulp.dest('dist'));
 });
 
 
-gulp.task("default", ["build:static", "build:webpack"]);
+gulp.task("default", gulp.series("build:static", "build:webpack", done => done()));
 
-gulp.task('test:clean', () => {
-    return del([`./${distTest}`]);
+gulp.task('test:clean', done => {
+    return del([`./${distTest}`], done);
 });
 
 gulp.task('test:static', function () {
@@ -65,6 +60,4 @@ gulp.task('test:run', () => {
         .on('error', console.error);
 });
 
-gulp.task('test', (callback) => {
-    return runSequence(['test:clean'], ['test:static', 'test:build'], ['test:run'], callback);
-});
+gulp.task('test', gulp.series('test:clean', gulp.parallel('test:static', 'test:build'), 'test:run', done => done()));

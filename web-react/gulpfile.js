@@ -1,7 +1,6 @@
 const gulp = require('gulp');
 const tar = require('gulp-tar');
 const gz = require('gulp-gzip');
-const runSequence = require('run-sequence');
 const del = require('del');
 const exec = require('child_process').exec;
 const packageJson = require('./package.json');
@@ -49,20 +48,16 @@ gulp.task('build:ui', (callback) => {
     });
 });
 
-gulp.task('build', (callback) => {
-    return runSequence(['build:api'], ['build:ui'], callback);
-});
+gulp.task('build', gulp.series('build:api', 'build:ui', done => done()));
 
 gulp.task('test:api', (callback) => {
     return execGulp(apiDir, 'test', callback);
 });
 
-gulp.task('test', (callback) => {
-    return runSequence(['test:api'], callback);
-});
+gulp.task('test', gulp.series('test:api', done => done()));
 
-gulp.task('clean', () => {
-    return del([target]);
+gulp.task('clean', done => {
+    return del([target], done);
 });
 
 gulp.task('deploy:tar.gz', () => {
@@ -72,11 +67,6 @@ gulp.task('deploy:tar.gz', () => {
         .pipe(gulp.dest(target));
 });
 
-gulp.task('deploy', (callback) => {
-    buildSourceMaps = false;
-    return runSequence(['clean'], ['build'], ['deploy:tar.gz'], callback)
-});
+gulp.task('deploy', gulp.series('clean', 'build', 'deploy:tar.gz', done => done()));
 
-gulp.task('default', (callback) => {
-    return runSequence(['clean'], ['build'], callback);
-});
+gulp.task('default', gulp.series('clean', 'build', done => done()));

@@ -6,7 +6,7 @@ import { createStore } from 'redux';
 import { App } from './components/App';
 import { default as rootReducer, State } from './reducers';
 
-const store = createStore<State>(rootReducer);
+const store = createStore<State, any, any, any>(rootReducer);
 
 render(
     <Provider store={store}>

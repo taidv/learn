@@ -1,6 +1,7 @@
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 	entry: "./src/index.tsx",
@@ -9,6 +10,8 @@ module.exports = {
 		path: __dirname + "/dist",
 		publicPath: ""
 	},
+
+	mode: 'development',
 
 	// Enable sourcemaps for debugging webpack's output.
 	devtool: "source-map",
@@ -32,16 +35,36 @@ module.exports = {
 	plugins: [
         new ExtractTextPlugin({ filename: "[name].css", disable: false, allChunks: true }),
 		new HtmlWebpackPlugin({
-			title: 'Loading...',
+			title: 'Hello React',
 			template: './src/index.html'
 		}),
+		new CopyWebpackPlugin([ { from: 'src/static', to: 'static' } ]),
 		new HtmlWebpackExternalsPlugin({
 			externals: [
-				{ module: 'react', global: 'React', entry: 'https://unpkg.com/react@16.2.0/umd/react.production.min.js' },
-				{ module: 'react-dom', global: 'ReactDOM', entry: 'https://unpkg.com/react-dom@16.2.0/umd/react-dom.production.min.js' },
-				{ module: 'redux', global: 'Redux', entry: 'https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.js' },
-				{ module: 'react-redux', global: 'ReactRedux', entry: 'https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.7/react-redux.js' }
-			]
+				{ 
+					module: 'react', 
+					global: 'React', 
+					hash: true,
+					entry: 'umd/react.production.min.js'
+				},
+				{
+					module: 'react-dom',
+					global: 'ReactDOM',
+					entry: 'umd/react-dom.production.min.js'
+				},
+				{
+					module: 'redux',
+					global: 'Redux',
+					entry: 'dist/redux.min.js'
+				},
+				{
+					module: 'react-redux',
+					global: 'ReactRedux',
+					entry: 'dist/react-redux.min.js'
+				}
+			],
+			hash: true,
+			outputPath: "libs"
 		})
 	],
 	// When importing a module whose path matches one of the following, just

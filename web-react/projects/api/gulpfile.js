@@ -7,8 +7,7 @@ const tsProjectTest = ts.createProject("tsconfig.json");
 const merge = require('merge2');
 const del = require('del');
 const install = require('gulp-install');
-const runSequence = require('run-sequence');
-const packageJson = require('./package.json')
+const packageJson = require('./package.json');
 
 let buildSourceMaps = true;
 
@@ -19,13 +18,13 @@ const distTest = packageJson.test;
 const distBuild = packageJson.build;
 
 // clean task
-gulp.task('build:clean', () => {
-    return del([packageJson.main]);
+gulp.task('build:clean', (done) => {
+    return del([packageJson.main], done);
 });
 
 // clean tests task
-gulp.task('test:clean', () => {
-    return del([`./${distTest}`]);
+gulp.task('test:clean', (done) => {
+    return del([`./${distTest}`], done);
 });
 
 gulp.task('test:copy-static', () => {
@@ -38,6 +37,7 @@ gulp.task('test:copy-resource', () => {
     return gulp.src(resourcePath, { base: './test' })
         .pipe(gulp.dest(packageJson.main));
 });
+
 gulp.task('test:build', () => {
     return gulp.src(["./src/**/*.ts", "./test/**/*.ts"], { base: './' })
         .pipe(sourcemaps.init())
@@ -48,15 +48,15 @@ gulp.task('test:build', () => {
 });
 
 // clean tests task
-gulp.task('test:clean-build', (callback) => {
-    return runSequence(['test:clean'], ['test:build'], callback);
-});
+gulp.task('test:clean-build', gulp.series('test:clean', 'test:build', done => {
+    done() ;
+}));
 
 gulp.task('build:build', () => {
     let pipe = tsProject.src()
-        .pipe(sourcemaps.init())
+        .pipe(sourcemaps.init());
 
-    let tsc = pipe.pipe(tsProject())
+    let tsc = pipe.pipe(tsProject());
 
     pipe = merge(tsc.dts, tsc.js);
 
@@ -64,7 +64,6 @@ gulp.task('build:build', () => {
         pipe = pipe.pipe(sourcemaps.mapSources((sourcePath, file) => "../".repeat(sourcePath.match(/\//g).length - 3) + sourcePath))
             .pipe(sourcemaps.write('.'));
     }
-
     return pipe.pipe(gulp.dest(packageJson.main));
 });
 
@@ -73,22 +72,30 @@ gulp.task('build:copy-static', () => {
         .pipe(gulp.dest(packageJson.main));
 });
 
-gulp.task('test:run', () => {
+gulp.task('test:run', done => {
     gulp.src(`./${distTest}/**/*.spec.js`, { read: false })
         .pipe(mocha({
             reporter: process.env.MOCHA_REPORTER ? process.env.MOCHA_REPORTER : "spec",
             reporterOptions: process.env.MOCHA_REPORTEROPTIONS ? process.env.MOCHA_REPORTEROPTIONS : undefined
         }));
+    done();
 });
 
 
-gulp.task('test', (callback) => {
-    return runSequence(['test:clean'], ['test:build', 'test:copy-static', 'test:copy-resource'], ['test:run'], callback);
-});
+gulp.task('test', gulp.series(
+    'test:clean',
+    'test:build',
+    gulp.parallel('test:copy-static', 'test:copy-resource'),
+    'test:run',
+    done => { done(); }
+));
 
-gulp.task('build', (callback) => {
-    return runSequence(['build:clean', 'test:clean'], ['build:build', 'build:copy-static'], callback);
-});
+gulp.task('build', gulp.series(
+    gulp.parallel('build:clean', 'test:clean'),
+    'build:build',
+    'build:copy-static',
+    done => { done(); }
+));
 
 gulp.task('deploy:copy-build', () => {
     return gulp.src([packageJson.main + '/*', packageJson.main + '/**/*', './bin/*', './bin/**/*'], { base: '.' })
@@ -101,18 +108,17 @@ gulp.task('deploy:install', () => {
         .pipe(install({ production: true }));
 });
 
-gulp.task('deploy', (callback) => {
+gulp.task('deploy', done => {
     buildSourceMaps = false;
-
-    return runSequence(['build'], ['deploy:copy-build', 'deploy:install'], callback)
+    return gulp.series('build', 'deploy:copy-build', 'deploy:install', done);
 });
 
-gulp.task('watch', ['build:build', 'build:copy-static'], () => {
-    gulp.watch('./src/*', ['build:build', 'build:copy-static'])
-});
+gulp.task('watch', gulp.series('build:build', 'build:copy-static', () => {
+    return gulp.watch('./src/*', gulp.series('build:build', 'build:copy-static'));
+}));
 
 gulp.task('watch-all', () => {
-    gulp.watch('./src/**/*.*', ['build:build', 'build:copy-static'])
+    return gulp.watch('./src/**/*.*', gulp.series('build:build', 'build:copy-static'));
 });
 
-gulp.task('default', ['build', 'watch-all']);
+gulp.task('default', gulp.series('build', 'watch-all', done => { done(); }));
