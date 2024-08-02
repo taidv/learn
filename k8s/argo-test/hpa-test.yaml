@@ -31,7 +31,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: nginx
-  minReplicas: 2
+  minReplicas: 3
   maxReplicas: 5
   metrics:
     - resource:
@@ -40,3 +40,13 @@ spec:
           averageUtilization: 1
           type: Utilization
       type: Resource
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nginx
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: nginx
