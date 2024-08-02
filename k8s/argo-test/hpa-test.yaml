@@ -15,6 +15,12 @@ spec:
       labels:
         app: nginx
     spec:
+      lifecycle:
+        preStop:
+          exec:
+            command:
+              - sleep
+              - 25
       containers:
       - name: nginx
         image: nginx:1.14.2
